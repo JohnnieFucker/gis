@@ -841,8 +841,8 @@ async function displayVehicleTrajectory(vehicleId) {
         addDirectionArrows(latlngs);
     }
 
-    // 添加静止段标注
-    addStationaryLabels(stationarySegments, trajectory);
+    // 添加静止段标注（传递vehicleId以便获取车辆当前位置）
+    addStationaryLabels(stationarySegments, trajectory, vehicleId);
 
     // 调整地图视野以显示完整轨迹
     map.fitBounds(polyline.getBounds(), { padding: [50, 50] });
@@ -1026,18 +1026,57 @@ function formatDuration(seconds) {
     }
 }
 
-// 添加静止段标注（只显示最后一次停留）
-function addStationaryLabels(segments, points) {
-    if (segments.length === 0) return;
+// 检查最后一个点是否为静止状态（使用与analyzeMovementStates相同的阈值逻辑）
+function isLastPointStationary(points) {
+    if (points.length < 2) return false;
+    
+    const STATIONARY_DISTANCE_THRESHOLD = CONFIG.movementDetection.stationaryDistanceThreshold;
+    const WINDOW_SIZE = Math.min(CONFIG.movementDetection.windowSize, points.length - 1);
+    
+    // 计算最后几个点的平均距离（使用滑动窗口）
+    const lastDistIdx = points.length - 2; // 最后一个距离的索引（points[i-1]到points[i]）
+    const windowStart = Math.max(0, lastDistIdx - Math.floor(WINDOW_SIZE / 2));
+    const windowEnd = Math.min(points.length - 2, lastDistIdx + Math.floor(WINDOW_SIZE / 2));
+    
+    let totalDist = 0;
+    let count = 0;
+    
+    for (let i = windowStart; i <= windowEnd; i++) {
+        if (i < points.length - 1) {
+            const dist = calculateDistance(points[i].lat, points[i].lng, points[i + 1].lat, points[i + 1].lng);
+            totalDist += dist;
+            count++;
+        }
+    }
+    
+    const avgDistance = count > 0 ? totalDist / count : 0;
+    return avgDistance < STATIONARY_DISTANCE_THRESHOLD;
+}
 
+// 添加静止段标注（显示在车辆标记上方，仅当车辆静止时显示）
+function addStationaryLabels(segments, points, vehicleId) {
+    // 如果没有停留段，不显示
+    if (segments.length === 0) return;
+    
+    // 检查最后一个点是否为静止状态
+    if (!isLastPointStationary(points)) {
+        return; // 车辆在移动，不显示停留信息
+    }
+    
     // 只显示最后一个停留段（当前所在地的停留）
     const lastSegment = segments[segments.length - 1];
-    const centerIndex = Math.floor((lastSegment.startIndex + lastSegment.endIndex) / 2);
-    const centerPoint = points[centerIndex];
-
+    
+    // 获取车辆当前位置（使用车辆标记的位置，而不是静止段的中心）
+    const vehicle = vehicles.find(v => v.id === vehicleId);
+    if (!vehicle || !vehicleMarkers[vehicleId]) {
+        return;
+    }
+    
+    const vehiclePosition = vehicleMarkers[vehicleId].getLatLng();
     const labelText = `停留: ${formatDuration(lastSegment.duration)}`;
 
     // 创建真实的DOM div元素作为图标
+    // 调整锚点，让标签显示在车辆标记上方（车辆标记高度约41px，popup在标记上方，标签要在popup上方）
     const labelIcon = L.divIcon({
         className: "stationary-label",
         html: `<div style="
@@ -1056,10 +1095,14 @@ function addStationaryLabels(segments, points) {
             pointer-events: none;
         ">${labelText}</div>`,
         iconSize: [120, 30],
-        iconAnchor: [60, 15] // 居中锚点
+        iconAnchor: [60, 30] // 底部中心锚点，让标签显示在标记上方
     });
 
-    const labelMarker = L.marker([centerPoint.lat, centerPoint.lng], {
+    // 计算标签位置（车辆标记上方，考虑popup的高度）
+    // 在zoom level 18下，约0.001度纬度≈111米，标签需要显示在标记+popup上方约80-100像素处
+    // 使用约0.0009度（约100米）的偏移，让标签显示在popup上方
+    const labelOffset = 0.0009; // 约100米，用于在地图上偏移标签位置（向上，纬度增加）
+    const labelMarker = L.marker([vehiclePosition.lat + labelOffset, vehiclePosition.lng], {
         icon: labelIcon,
         interactive: false,
         zIndexOffset: 2000
