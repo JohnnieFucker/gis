@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>川锅智能</title>
+
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+        <!-- 自定义样式 -->
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>川锅转运监控系统</h1>
+            </header>
+
+            <div class="main-content">
+                <!-- 车辆列表面板 -->
+                <aside class="control-panel">
+                    <div class="panel-section">
+                        <h2>车辆列表</h2>
+                        <div id="vehicle-list" class="vehicle-list">
+                            <p class="empty-message">加载中...</p>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- 地图容器 -->
+                <main class="map-container">
+                    <div id="map"></div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Leaflet JavaScript -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+        <!-- 配置文件（必须在map.js之前加载） -->
+        <script src="config.js"></script>
+
+        <!-- 自定义JavaScript -->
+        <script src="map.js"></script>
+    </body>
+</html>

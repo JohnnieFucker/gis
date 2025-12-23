@@ -1,0 +1,374 @@
+/* 全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #f5f5f5;
+    color: #333;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 头部样式 */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* 主内容区域 */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 控制面板 */
+.control-panel {
+    width: 200px;
+    background-color: white;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.panel-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.panel-section:last-child {
+    border-bottom: none;
+}
+
+.panel-section h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* 按钮样式 */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background-color: #f44336;
+    color: white;
+    margin-top: 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #d32f2f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+/* 车辆列表 */
+.vehicle-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.empty-message {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+.vehicle-item {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.vehicle-item:hover {
+    background-color: #f0f0f0;
+    border-color: #667eea;
+    
+}
+
+.vehicle-item.selected {
+    background-color: #e8eaf6;
+    border-color: #667eea;
+    border-width: 2px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.vehicle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.vehicle-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+}
+
+.vehicle-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-running {
+    background-color: #4caf50;
+    color: white;
+}
+
+.status-stopped {
+    background-color: #9e9e9e;
+    color: white;
+}
+
+.vehicle-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.vehicle-plate {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.vehicle-time {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.trajectory-indicator {
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #ff5722;
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+/* 轨迹按钮 */
+.trajectory-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.btn-trajectory {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    border: 1px solid #667eea;
+    border-radius: 4px;
+    background-color: white;
+    color: #667eea;
+    font-size: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-trajectory:hover {
+    background-color: #f0f0ff;
+    transform: translateY(-1px);
+}
+
+.btn-trajectory.active {
+    background-color: #667eea;
+    color: white;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+/* 方向箭头样式 */
+.direction-arrow {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* 静止段标注样式 */
+.stationary-label {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.stationary-label-wrapper {
+    display: inline-block !important;
+    background-color: rgba(46, 125, 50, 0.95) !important;
+    border: 2px solid #2E7D32 !important;
+    border-radius: 4px !important;
+    padding: 4px 8px !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: #FFFFFF !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+    text-align: center !important;
+    line-height: 1.2 !important;
+    pointer-events: none !important;
+    transform: translate(-50%, -50%) !important; /* 居中定位 */
+    position: relative !important;
+    left: 50% !important;
+    top: 50% !important;
+}
+
+/* 地图容器 */
+.map-container {
+    flex: 1;
+    position: relative;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .control-panel {
+        width: 100%;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .map-container {
+        height: 60vh;
+    }
+}
+
+/* 滚动条样式 */
+.control-panel::-webkit-scrollbar,
+.marker-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.control-panel::-webkit-scrollbar-track,
+.marker-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.control-panel::-webkit-scrollbar-thumb,
+.marker-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.control-panel::-webkit-scrollbar-thumb:hover,
+.marker-list::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 车辆popup样式 */
+.vehicle-popup .leaflet-popup-content-wrapper {
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.vehicle-popup .leaflet-popup-content {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.vehicle-popup-content {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+/* 隐藏popup的关闭按钮 */
+.vehicle-popup .leaflet-popup-close-button {
+    display: none !important;
+}
+
+/* 隐藏popup的箭头（尖角） */
+.vehicle-popup .leaflet-popup-tip {
+    display: none !important;
+}
