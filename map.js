@@ -670,8 +670,8 @@ function displayAllVehicles() {
         // 创建车辆标记
         const marker = L.marker([vehicle.currentLocation.lat, vehicle.currentLocation.lng], {
             icon: L.icon({
-                iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
-                shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                iconUrl: `marker-icon-2x-${iconColor}.png`,
+                shadowUrl: "marker-shadow.png",
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [0, -34],
@@ -844,8 +844,8 @@ async function displayVehicleTrajectory(vehicleId) {
                 // 选中状态使用红色图标
                 vehicleMarkers[v.id].setIcon(
                     L.icon({
-                        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-                        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                        iconUrl: "marker-icon-2x-red.png",
+                        shadowUrl: "marker-shadow.png",
                         iconSize: [25, 41],
                         iconAnchor: [12, 41],
                         popupAnchor: [1, -34],
@@ -856,8 +856,8 @@ async function displayVehicleTrajectory(vehicleId) {
                 // 其他车辆使用蓝色图标
                 vehicleMarkers[v.id].setIcon(
                     L.icon({
-                        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-                        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                        iconUrl: "marker-icon-2x-red.png",
+                        shadowUrl: "marker-shadow.png",
                         iconSize: [25, 41],
                         iconAnchor: [12, 41],
                         popupAnchor: [1, -34],
@@ -1111,8 +1111,8 @@ function clearTrajectory() {
         if (vehicleMarkers[v.id]) {
             vehicleMarkers[v.id].setIcon(
                 L.icon({
-                    iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-                    shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+                    iconUrl: "marker-icon-2x-red.png",
+                    shadowUrl: "marker-shadow.png",
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
                     popupAnchor: [1, -34],
