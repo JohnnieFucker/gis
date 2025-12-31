@@ -688,12 +688,12 @@ function displayAllVehicles() {
         const labelIcon = L.divIcon({
             className: "vehicle-label",
             html: `<div class="vehicle-label-content">${labelText}</div>`,
-            iconSize: [200, 30],
-            iconAnchor: [100, 30] // 底部中心对齐（宽度的一半，高度）
+            iconSize: [180, 30],
+            iconAnchor: [90, 0] // 底部中心对齐（宽度的一半，高度）
         });
 
         // 标签位置在车辆标记上方，约50像素（在地图缩放级别18下约0.00045度）
-        const labelOffset = 0.00045;
+        const labelOffset = 0.00038;
         const labelMarker = L.marker([vehicle.currentLocation.lat + labelOffset, vehicle.currentLocation.lng], {
             icon: labelIcon,
             interactive: false,
@@ -1085,13 +1085,13 @@ function addStationaryLabels(segments, points, vehicleId) {
             pointer-events: none;
         ">${labelText}</div>`,
         iconSize: [120, 30],
-        iconAnchor: [60, 30] // 底部中心锚点，让标签显示在标记上方
+        iconAnchor: [60, 0] // 底部中心锚点，让标签显示在标记上方
     });
 
     // 计算标签位置（车辆标记上方，考虑popup的高度）
     // 在zoom level 18下，约0.001度纬度≈111米，标签需要显示在标记+popup上方约80-100像素处
     // 使用约0.0009度（约100米）的偏移，让标签显示在popup上方
-    const labelOffset = 0.0009; // 约100米，用于在地图上偏移标签位置（向上，纬度增加）
+    const labelOffset = 0.0005;
     const labelMarker = L.marker([vehiclePosition.lat + labelOffset, vehiclePosition.lng], {
         icon: labelIcon,
         interactive: false,
