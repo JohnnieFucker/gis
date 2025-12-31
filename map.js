@@ -667,51 +667,41 @@ function displayAllVehicles() {
             iconColor = "grey";
         }
 
+        // 创建车辆标记
         const marker = L.marker([vehicle.currentLocation.lat, vehicle.currentLocation.lng], {
             icon: L.icon({
                 iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`,
                 shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
-                popupAnchor: [0, -34], // 设置为0可以隐藏箭头
+                popupAnchor: [0, -34],
                 shadowSize: [41, 41]
             })
         });
 
-        // 创建popup，配置为不显示关闭按钮
-        const popup = L.popup({
-            closeButton: false,
-            autoPan: false,
-            className: "vehicle-popup"
-        }).setContent(`
-            <div class="vehicle-popup-content">
-                [${formatRelativeTime(vehicle.lastUpdateTime)}] <strong>${vehicle.name}</strong>
-            </div>
-        `);
-
-        marker.bindPopup(popup);
         marker.addTo(markerLayerGroup);
-
         vehicleMarkers[vehicle.id] = marker;
-    });
 
-    // 在所有marker添加完成后，统一打开所有popup
-    // 使用双重延迟确保地图和marker都已完全渲染
-    setTimeout(() => {
-        vehicles.forEach((vehicle) => {
-            if (vehicleMarkers[vehicle.id]) {
-                try {
-                    // 强制打开popup
-                    const marker = vehicleMarkers[vehicle.id];
-                    if (marker && marker.getPopup()) {
-                        marker.openPopup();
-                    }
-                } catch (e) {
-                    console.warn(`无法打开车辆 ${vehicle.id} 的popup:`, e);
-                }
-            }
+        // 创建车辆标签（使用divIcon，支持同时显示多个）
+        // 标签显示在标记上方，使用偏移量让标签在标记上方约50像素处
+        const labelText = `[${formatRelativeTime(vehicle.lastUpdateTime)}] <strong>${vehicle.name}</strong>`;
+        const labelIcon = L.divIcon({
+            className: "vehicle-label",
+            html: `<div class="vehicle-label-content">${labelText}</div>`,
+            iconSize: [200, 30],
+            iconAnchor: [100, 30] // 底部中心对齐（宽度的一半，高度）
         });
-    }, 500);
+
+        // 标签位置在车辆标记上方，约50像素（在地图缩放级别18下约0.00045度）
+        const labelOffset = 0.00045;
+        const labelMarker = L.marker([vehicle.currentLocation.lat + labelOffset, vehicle.currentLocation.lng], {
+            icon: labelIcon,
+            interactive: false,
+            zIndexOffset: 1000
+        });
+
+        labelMarker.addTo(markerLayerGroup);
+    });
 
     // 如果有多辆车，调整地图视野以包含所有车辆
     // 只在首次加载时自动调整视野，避免刷新时频繁跳动
@@ -1029,18 +1019,18 @@ function formatDuration(seconds) {
 // 检查最后一个点是否为静止状态（使用与analyzeMovementStates相同的阈值逻辑）
 function isLastPointStationary(points) {
     if (points.length < 2) return false;
-    
+
     const STATIONARY_DISTANCE_THRESHOLD = CONFIG.movementDetection.stationaryDistanceThreshold;
     const WINDOW_SIZE = Math.min(CONFIG.movementDetection.windowSize, points.length - 1);
-    
+
     // 计算最后几个点的平均距离（使用滑动窗口）
     const lastDistIdx = points.length - 2; // 最后一个距离的索引（points[i-1]到points[i]）
     const windowStart = Math.max(0, lastDistIdx - Math.floor(WINDOW_SIZE / 2));
     const windowEnd = Math.min(points.length - 2, lastDistIdx + Math.floor(WINDOW_SIZE / 2));
-    
+
     let totalDist = 0;
     let count = 0;
-    
+
     for (let i = windowStart; i <= windowEnd; i++) {
         if (i < points.length - 1) {
             const dist = calculateDistance(points[i].lat, points[i].lng, points[i + 1].lat, points[i + 1].lng);
@@ -1048,7 +1038,7 @@ function isLastPointStationary(points) {
             count++;
         }
     }
-    
+
     const avgDistance = count > 0 ? totalDist / count : 0;
     return avgDistance < STATIONARY_DISTANCE_THRESHOLD;
 }
@@ -1057,21 +1047,21 @@ function isLastPointStationary(points) {
 function addStationaryLabels(segments, points, vehicleId) {
     // 如果没有停留段，不显示
     if (segments.length === 0) return;
-    
+
     // 检查最后一个点是否为静止状态
     if (!isLastPointStationary(points)) {
         return; // 车辆在移动，不显示停留信息
     }
-    
+
     // 只显示最后一个停留段（当前所在地的停留）
     const lastSegment = segments[segments.length - 1];
-    
+
     // 获取车辆当前位置（使用车辆标记的位置，而不是静止段的中心）
-    const vehicle = vehicles.find(v => v.id === vehicleId);
+    const vehicle = vehicles.find((v) => v.id === vehicleId);
     if (!vehicle || !vehicleMarkers[vehicleId]) {
         return;
     }
-    
+
     const vehiclePosition = vehicleMarkers[vehicleId].getLatLng();
     const labelText = `停留: ${formatDuration(lastSegment.duration)}`;
 

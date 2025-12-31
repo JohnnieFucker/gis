@@ -348,27 +348,26 @@ header h1 {
 }
 
 /* 车辆popup样式 */
-.vehicle-popup .leaflet-popup-content-wrapper {
-    border-radius: 4px;
-    padding: 8px 12px;
+/* 车辆标签样式（使用divIcon显示，支持多个同时显示） */
+.vehicle-label {
+    background: transparent !important;
+    border: none !important;
 }
 
-.vehicle-popup .leaflet-popup-content {
-    margin: 0;
+.vehicle-label-content {
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    color: #333;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    text-align: center;
     line-height: 1.4;
 }
 
-.vehicle-popup-content {
-    font-size: 0.9rem;
-    color: #333;
-}
-
-/* 隐藏popup的关闭按钮 */
-.vehicle-popup .leaflet-popup-close-button {
-    display: none !important;
-}
-
-/* 隐藏popup的箭头（尖角） */
-.vehicle-popup .leaflet-popup-tip {
-    display: none !important;
+.vehicle-label-content strong {
+    font-weight: 600;
 }
