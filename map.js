@@ -189,7 +189,9 @@ function filterGPSDrift(points) {
             }
 
             // 如果角度变化太大且速度较高，可能是漂移
-            if (angleChange > MAX_ANGLE_CHANGE && speed > 30) {
+            // 对于货车，在高速行驶时（>60km/h）角度变化应该更平滑，低速时允许更大的角度变化
+            const speedThreshold = speed > 60 ? 60 : 30; // 高速时更严格，低速时允许更大角度变化
+            if (angleChange > MAX_ANGLE_CHANGE && speed > speedThreshold) {
                 console.log(`过滤漂移点: 角度变化 ${angleChange.toFixed(2)}度 超过最大值 ${MAX_ANGLE_CHANGE}度，速度 ${speed.toFixed(2)} km/h`);
                 continue;
             }
@@ -466,7 +468,8 @@ function identifyRecentTrip(points) {
             const currentPoint = allTripPoints[i];
             const distance = calculateDistance(prevPoint.lat, prevPoint.lng, currentPoint.lat, currentPoint.lng);
             const timeDiff = (currentPoint.time - prevPoint.time) / 1000 / 60; // 分钟
-            if (distance > 100 && timeDiff > 2) {
+            // 对于货车，移动距离更大，调整断点检测阈值
+            if (distance > 200 && timeDiff > 2) {
                 console.log(`检测到两趟数据之间的断点: 索引${i - 1}到${i}, 距离${distance.toFixed(2)}m, 时间间隔${timeDiff.toFixed(2)}分钟`);
             }
         }
