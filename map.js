@@ -849,7 +849,7 @@ async function displayVehicleTrajectory(vehicleId) {
     }
 
     // 将轨迹点转换为LatLng数组
-    const latlngs = trajectory.map((point) => wgs84togcj02(point.lng, point.lat));
+    const latlngs = trajectory.map((point) => CoordTransform.wgs84togcj02(point.lng, point.lat));
 
     // 识别静止段并计算停留时长
     const stationarySegments = identifyStationarySegments(trajectory);
