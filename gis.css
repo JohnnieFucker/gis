@@ -352,6 +352,7 @@ header h1 {
 .vehicle-label {
     background: transparent !important;
     border: none !important;
+    z-index: 1000 !important; /* 确保标签在最顶层 */
 }
 
 .vehicle-label-content {

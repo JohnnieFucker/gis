@@ -859,7 +859,8 @@ async function displayVehicleTrajectory(vehicleId) {
         color: "#FF0000",
         weight: 4,
         opacity: 0.8,
-        smoothFactor: 1
+        smoothFactor: 1,
+        pane: 'shadowPane' // 使用 shadowPane (zIndex 500) 确保在 overlayPane (400) 之上，但在 markerPane (600) 之下
     };
 
     // 创建轨迹线
