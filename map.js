@@ -811,7 +811,8 @@ function addDirectionArrows(latlngs) {
         const arrowMarker = L.marker([midLat, midLng], {
             icon: arrowIcon,
             interactive: false, // 箭头不可点击
-            zIndexOffset: 1000 // 确保箭头在轨迹线上方
+            pane: "shadowPane", // 将箭头移至 shadowPane (zIndex 500)
+            zIndexOffset: 100 // 在 shadowPane 内部稍微提升，确保在轨迹线上方
         });
         arrowMarker.addTo(trajectoryLayerGroup);
         arrowMarkers.push(arrowMarker);
@@ -860,7 +861,7 @@ async function displayVehicleTrajectory(vehicleId) {
         weight: 4,
         opacity: 0.8,
         smoothFactor: 1,
-        pane: 'shadowPane' // 使用 shadowPane (zIndex 500) 确保在 overlayPane (400) 之上，但在 markerPane (600) 之下
+        pane: "shadowPane" // 使用 shadowPane (zIndex 500) 确保在 overlayPane (400) 之上，但在 markerPane (600) 之下
     };
 
     // 创建轨迹线
