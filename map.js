@@ -50,7 +50,7 @@ const CoordTransform = {
         dlng = (dlng * 180.0) / ((this.a / sqrtmagic) * Math.cos(radlat) * this.PI);
         let mglat = lat + dlat;
         let mglng = lng + dlng;
-        return [mglng, mglat];
+        return [mglat, mglng];
     }
 };
 
@@ -127,13 +127,13 @@ async function fetchAllVehicles() {
         .filter((result) => result !== null)
         .map((result) => {
             const updateTime = new Date(result.time);
-
+            const location = CoordTransform.wgs84togcj02(result.realtime_datas.longitude, result.realtime_datas.latitude);
             return {
                 id: result.device_id,
                 name: result.device_name,
                 currentLocation: {
-                    lat: CoordTransform.wgs84togcj02(result.realtime_datas.longitude, result.realtime_datas.latitude)[1],
-                    lng: CoordTransform.wgs84togcj02(result.realtime_datas.longitude, result.realtime_datas.latitude)[0]
+                    lat: location[0],
+                    lng: location[1]
                 },
                 lastUpdateTime: updateTime
             };
@@ -849,7 +849,7 @@ async function displayVehicleTrajectory(vehicleId) {
     }
 
     // 将轨迹点转换为LatLng数组
-    const latlngs = trajectory.map((point) => [point.lat, point.lng]);
+    const latlngs = trajectory.map((point) => wgs84togcj02(point.lng, point.lat));
 
     // 识别静止段并计算停留时长
     const stationarySegments = identifyStationarySegments(trajectory);
